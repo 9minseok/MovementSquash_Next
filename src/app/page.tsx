@@ -1,9 +1,12 @@
 
 export default function Home() {
   return (
-    <div className="">
+    <div className="flex items-center justify-center flex-col h-dvh text-8xl gap-5">
       <div>
-        첫 페이지
+        MOVEMENT
+      </div>
+      <div>
+        SQUASH
       </div>
     </div>
   );
