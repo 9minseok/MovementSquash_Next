@@ -16,7 +16,7 @@ export default function Home() {
         </div>
         <div>
           <Button variant="ghost" asChild>
-            <Link href="/product">START</Link>
+            <Link href="/menu">START</Link>
           </Button>
         </div>
       </div>
