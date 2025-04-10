@@ -1,15 +1,14 @@
 'use client';
 
 import { useSearchParams } from "next/navigation";
-import React from "react";
 
-const Measure = () => {
+export default function Page() {
   const searchParams = useSearchParams();
   const item = searchParams.get("item");
 
   return (
     <div
-      className="flex items-center flex-col justify-center h-dvh text-5xl"
+      className="flex items-center flex-col justify-center h-dvh text-5xl bg-zinc-800"
       style={{
         backgroundImage: 'url("/images/squash_map.png")',
         backgroundSize: '',
@@ -17,7 +16,7 @@ const Measure = () => {
         backgroundPosition: 'center',
       }}
     >
-      <div className="flex item-center flex-col absolute top-10 text-black">
+      <div className="flex item-center flex-col absolute top-10 text-white">
         <h1 className="text-3xl font-bold bg-opacity-60 p-2 rounded">
           Measure Page
         </h1>
@@ -27,6 +26,4 @@ const Measure = () => {
       </div>
     </div>
   );
-};
-
-export default Measure;
+}
