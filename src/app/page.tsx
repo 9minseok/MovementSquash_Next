@@ -16,7 +16,7 @@ export default function Home() {
     <div className="w-full min-h-screen">
       <section className="relative w-full h-dvh overflow-hidden">
         <video
-          src="/video/background_video.mp4"
+          src="/videos/background_video.mp4"
           autoPlay
           muted
           loop
