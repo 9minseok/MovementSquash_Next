@@ -3,8 +3,14 @@
 
 @custom-variant dark (&:is(.dark *));
 
-body {
+html, body {
+  scrollbar-width: none;
+  -ms-overflow-style: none; 
   font-family: YdestreetL;
+}
+
+::-webkit-scrollbar {
+  display: none;
 }
 
 @font-face {
