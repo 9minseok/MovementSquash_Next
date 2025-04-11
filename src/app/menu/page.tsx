@@ -28,7 +28,7 @@ const Menu = () => {
                 }} className="block">
                   <Card className="bg-zinc-500 cursor-pointer hover:bg-zinc-200 border-zinc-500">
                     <CardContent className="flex aspect-square items-center justify-center p-6">
-                      <span className="text-5xl font-semibold text-black text-center">{list}</span>
+                      <span className="text-5xl font-semibold text-white text-center">{list}</span>
                     </CardContent>
                   </Card>
                 </Link>
