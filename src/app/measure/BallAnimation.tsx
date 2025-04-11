@@ -1,14 +1,15 @@
-'use client'
+'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import useMeasureStore from '@/stores/measureStore';
 
 const SQUASH_POSITIONS = [
-  { top: '7%', left: '10%' }, // 1행 1열
-  { top: '7%', left: '90%' }, // 1행 2열
-  { top: '50%', left: '10%' },   // 2행 1열
-  { top: '50%', left: '90%' },   // 2행 2열
-  { top: '93%', left: '10%' }, // 3행 1열
-  { top: '93%', left: '90%' }, // 3행 2열
+  { top: '7%', left: '10%' },
+  { top: '7%', left: '90%' },
+  { top: '50%', left: '10%' },
+  { top: '50%', left: '90%' },
+  { top: '93%', left: '10%' },
+  { top: '93%', left: '90%' },
 ];
 
 interface BallAnimationProps {
@@ -19,7 +20,16 @@ export default function BallAnimation({ running }: BallAnimationProps) {
   const [currentIndex, setCurrentIndex] = useState<number | null>(null);
   const prevIndexRef = useRef<number | null>(null);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const secondTimerRef = useRef<NodeJS.Timeout | null>(null);
 
+  const {
+    second,
+    increaseSecond,
+    resetSecond,
+    increaseRound,
+  } = useMeasureStore();
+
+  // 공 애니메이션
   useEffect(() => {
     if (running) {
       intervalRef.current = setInterval(() => {
@@ -43,6 +53,29 @@ export default function BallAnimation({ running }: BallAnimationProps) {
     };
   }, [running]);
 
+  // 1초마다 second 증가, 30초마다 round 증가
+  useEffect(() => {
+    if (running) {
+      secondTimerRef.current = setInterval(() => {
+        increaseSecond();
+      }, 1000);
+    } else {
+      if (secondTimerRef.current) clearInterval(secondTimerRef.current);
+    }
+
+    return () => {
+      if (secondTimerRef.current) clearInterval(secondTimerRef.current);
+    };
+  }, [running]);
+
+  // 30초 되면 라운드 증가
+  useEffect(() => {
+    if (second >= 30) {
+      increaseRound();
+      resetSecond();
+    }
+  }, [second]);
+
   if (currentIndex === null) return null;
 
   const pos = SQUASH_POSITIONS[currentIndex];
@@ -51,7 +84,7 @@ export default function BallAnimation({ running }: BallAnimationProps) {
     <img
       src="/images/squash_ball.png"
       alt="squash ball"
-      className="absolute w-10 h-10"
+      className="absolute"
       style={{
         width: '60px',
         height: '60px',
