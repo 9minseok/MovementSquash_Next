@@ -15,7 +15,7 @@ type MeasureState = {
 
 const useMeasureStore = create<MeasureState>()(
   persist(
-    (set, get) => ({
+    (set) => ({
       round: 1,
       second: 0,
       setRound: (round) => set({ round }),
