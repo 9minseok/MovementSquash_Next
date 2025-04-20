@@ -24,40 +24,88 @@ export default function BallAnimation({ running }: BallAnimationProps) {
 
   const {
     second,
-    increaseSecond,
+    decreaseSecond,
     resetSecond,
-    increaseRound,
+    increaseLevel,
+    level,
   } = useMeasureStore();
+  
 
+  const getIntervalByLevel = (level: number) => {
+    const map: Record<number, number> = {
+      1: 6000,
+      2: 5540,
+      3: 5140,
+      4: 4800,
+      5: 4500,
+      6: 4240,
+      7: 4000,
+      8: 3790,
+      9: 3600,
+      10: 3430,
+      11: 3270,
+      12: 3130,
+      13: 3000,
+      14: 2880,
+      15: 2770,
+      16: 2670,
+    };
+    return map[level] || 1000; // 기본값: 너무 높은 level이면 fallback으로 1초
+  };
+
+  const playSound = () => {
+    const audio = new Audio('/sounds/beep_only.mp3');
+    audio.play().catch((e) => {
+      console.warn('Audio play failed:', e);
+    });
+  };
+  
   // 공 애니메이션
   useEffect(() => {
     if (running) {
+      const interval = getIntervalByLevel(level);
+  
+      // 🔥 첫 공 즉시 실행
+      let randomIndex: number;
+      do {
+        randomIndex = Math.floor(Math.random() * SQUASH_POSITIONS.length);
+      } while (randomIndex === prevIndexRef.current);
+  
+      setCurrentIndex(randomIndex);
+      prevIndexRef.current = randomIndex;
+      playSound();
+
+      setTimeout(() => setCurrentIndex(null), interval-1000); // 첫 공도 600ms 뒤 사라지게
+  
+      // 🔁 이후는 interval마다 실행
       intervalRef.current = setInterval(() => {
         let randomIndex: number;
         do {
           randomIndex = Math.floor(Math.random() * SQUASH_POSITIONS.length);
         } while (randomIndex === prevIndexRef.current);
-
+  
         setCurrentIndex(randomIndex);
         prevIndexRef.current = randomIndex;
-
-        setTimeout(() => setCurrentIndex(null), 600);
-      }, 1000);
+        playSound();
+  
+        setTimeout(() => setCurrentIndex(null), interval-1000);
+      }, interval);
     } else {
       if (intervalRef.current) clearInterval(intervalRef.current);
       setCurrentIndex(null);
     }
-
+  
     return () => {
       if (intervalRef.current) clearInterval(intervalRef.current);
     };
-  }, [running]);
+  }, [running, level]);
+  
 
   // 1초마다 second 증가, 30초마다 round 증가
   useEffect(() => {
     if (running) {
       secondTimerRef.current = setInterval(() => {
-        increaseSecond();
+        decreaseSecond(); // 감소하도록 변경
       }, 1000);
     } else {
       if (secondTimerRef.current) clearInterval(secondTimerRef.current);
@@ -68,13 +116,14 @@ export default function BallAnimation({ running }: BallAnimationProps) {
     };
   }, [running]);
 
-  // 30초 되면 라운드 증가
+  // 0초 되면 라운드 증가 + 타이머 초기화
   useEffect(() => {
-    if (second >= 30) {
-      increaseRound();
-      resetSecond();
+    if (second <= 0) {
+      increaseLevel();
+      resetSecond(); // 다시 60초로 초기화
     }
   }, [second]);
+
 
   if (currentIndex === null) return null;
 

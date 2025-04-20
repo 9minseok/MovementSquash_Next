@@ -5,13 +5,14 @@ import { useSearchParams } from 'next/navigation';
 import useMeasureStore from '@/stores/measureStore';
 
 export default function SearchParamRenderer() {
-  const { setRound, setSecond } = useMeasureStore();
+  const { setLevel, setSecond } = useMeasureStore();
   const searchParams = useSearchParams();
   const item = searchParams.get('item');
 
+
   useEffect(() => {
-    setRound(1);
-    setSecond(1);
+    setLevel(1);
+    setSecond(60);
   },[item]);
   
   return (

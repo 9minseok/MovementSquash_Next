@@ -4,25 +4,33 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
 type MeasureState = {
-  round: number;
+  level: number;
   second: number;
-  setRound: (round: number) => void;
+  name: string;
+  gender: string;
+  setLevel: (level: number) => void;
   setSecond: (second: number) => void;
-  increaseSecond: () => void;
+  decreaseSecond: () => void;
   resetSecond: () => void;
-  increaseRound: () => void;
+  increaseLevel: () => void;
+  setName: (name: string) => void;
+  setGender: (gender: string) => void;
 };
 
 const useMeasureStore = create<MeasureState>()(
   persist(
     (set) => ({
-      round: 1,
-      second: 0,
-      setRound: (round) => set({ round }),
+      level: 1,
+      second: 60,
+      name: '',
+      gender: '',
+      setLevel: (level) => set({ level }),
       setSecond: (second) => set({ second }),
-      increaseSecond: () => set((state) => ({ second: state.second + 1 })),
-      resetSecond: () => set({ second: 0 }),
-      increaseRound: () => set((state) => ({ round: state.round + 1 })),
+      resetSecond: () => set({ second: 60 }),
+      decreaseSecond: () => set((state) => ({ second: state.second - 1 })),
+      increaseLevel: () => set((state) => ({ level: state.level + 1 })),
+      setName: (name) => set({ name }),
+      setGender: (gender) => set({ gender }),
     }),
     { name: 'measure-storage' }
   )
