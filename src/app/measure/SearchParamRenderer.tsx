@@ -4,7 +4,6 @@ import { useSearchParams } from 'next/navigation';
 import useMeasureStore from '@/stores/measureStore';
 
 export default function SearchParamRenderer() {
-  const { setSecond } = useMeasureStore();
   const searchParams = useSearchParams();
   const item = searchParams.get('item');
   
