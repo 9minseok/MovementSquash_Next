@@ -110,6 +110,7 @@ export default function BallAnimation({ running }: BallAnimationProps) {
     if (item === 'CUSTOM GHOSTING') {
       const interval = 2000; // 커스텀 모드의 고정 속도
       setAnimationCount(0); // 초기화
+      console.log('animationCount', animationCount)
   
       let count = 0;
   
