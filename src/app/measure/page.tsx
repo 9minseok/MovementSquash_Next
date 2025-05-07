@@ -1,15 +1,13 @@
 'use client'
 
 import { useState, useEffect, Suspense } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import BallAnimation from './BallAnimation';
 import SearchParamRenderer from './SearchParamRenderer';
 import useMeasureStore from '@/stores/measureStore';
 
 export default function Page() {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const item = searchParams.get('item');
   const [running, setRunning] = useState(false);
   const [isFinished, setIsFinished] = useState(false);
   const [elapsedTime, setElapsedTime] = useState(0);
@@ -58,17 +56,18 @@ export default function Page() {
       </Suspense>
 
       {/* 📊 레벨 & 타이머 표시 */}
-      <div className='absolute top-4 left-4 flex flex-col gap-2 text-2xl text-white'>
-        {item === 'CUSTOM GHOSTING' && <p>POINT: {ballCount}개</p>}
-        {item === 'CUSTOM GHOSTING' && <p>SET: {CustomSet}개</p>}
-        {item === 'CUSTOM GHOSTING' && <p>REPS: {CustomRep}개</p>}
-        {item !== 'CUSTOM GHOSTING' && <p>LEVEL : {level}</p>}
-        <p>INTERVAL : {(levelTerm / 1000).toFixed(2)}초</p>
-        <p>TIME : {second}</p>
-        {item === 'VO2 MAX TEST' && <p>NAME : {name}</p>}
-        {item === 'VO2 MAX TEST' && <p>GENDER : {gender}</p>}
-      </div>
-
+      <Suspense fallback={<div className="text-white">Loading...</div>}>
+        <div className='absolute top-4 left-4 flex flex-col gap-2 text-2xl text-white'>
+          {<p>POINT: {ballCount}개</p>}
+          {<p>SET: {CustomSet}개</p>}
+          {<p>REPS: {CustomRep}개</p>}
+          {<p>LEVEL : {level}</p>}
+          <p>INTERVAL : {(levelTerm / 1000).toFixed(2)}초</p>
+          <p>TIME : {second}</p>
+          {<p>NAME : {name}</p>}
+          {<p>GENDER : {gender}</p>}
+        </div>
+      </Suspense>
       {/* 🎯 START / STOP 버튼 */}
       {!isFinished ? (
         <button
@@ -104,11 +103,13 @@ export default function Page() {
       </div>
 
       {/* 🏁 점수 표시 */}
-      {!running && finalScore !== null && item === 'VO2 MAX TEST' && (
-        <div className="absolute bottom-8 text-white text-3xl font-bold bg-black/60 px-6 py-4 rounded-xl shadow-lg">
-          {name} 님의 VO2MAX 값은 <span className="text-green-400">{finalScore}</span> 입니다!
-        </div>
-      )}
+      <Suspense fallback={<div className="text-white">Loading...</div>}>
+        {!running && finalScore !== null && (
+          <div className="absolute bottom-8 text-white text-3xl font-bold bg-black/60 px-6 py-4 rounded-xl shadow-lg">
+            {name} 님의 VO2MAX 값은 <span className="text-green-400">{finalScore}</span> 입니다!
+          </div>
+        )}
+      </Suspense>
     </div>
   );
 }

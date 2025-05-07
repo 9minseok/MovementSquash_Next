@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { useSearchParams } from 'next/navigation';
 import useMeasureStore from '@/stores/measureStore';
 
 export const getSquashPositions = (count: number) => {
@@ -50,14 +49,12 @@ interface BallAnimationProps {
 
 export default function BallAnimation({ running }: BallAnimationProps) {
   const debugMode = false; // 공 위치 디버깅용
-  const searchParams = useSearchParams();
-  const item = searchParams.get('item');
 
   const [currentIndex, setCurrentIndex] = useState<number | null>(null);
   const prevIndexRef = useRef<number | null>(null);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const secondTimerRef = useRef<NodeJS.Timeout | null>(null);
-
+  const iscustomMode = false;
   const {
     second,
     setLevelTerm,
@@ -107,7 +104,7 @@ export default function BallAnimation({ running }: BallAnimationProps) {
   useEffect(() => {
     if (!running) return;
   
-    if (item === 'CUSTOM GHOSTING') {
+    if (iscustomMode) {
       const interval = 2000; // 커스텀 모드의 고정 속도
       setAnimationCount(0); // 초기화
       console.log('animationCount', animationCount)
