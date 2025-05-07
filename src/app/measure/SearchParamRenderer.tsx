@@ -1,7 +1,6 @@
 'use client';
 
 import { useSearchParams } from 'next/navigation';
-import useMeasureStore from '@/stores/measureStore';
 
 export default function SearchParamRenderer() {
   const searchParams = useSearchParams();
