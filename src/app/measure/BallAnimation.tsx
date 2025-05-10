@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState } from 'react';
 import useMeasureStore from '@/stores/measureStore';
-import { off } from 'process';
 
 export const getSquashPositions = (count: number) => {
   const positionsByCount: Record<number, { top: string; left: string }[]> = {
