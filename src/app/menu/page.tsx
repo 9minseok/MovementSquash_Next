@@ -73,7 +73,7 @@ const Menu = () => {
       if (!name || !gender) return;
       setPageInfo("VO2 MAX TEST")
       setLevel(1);
-      setSecond(2);
+      setSecond(60);
       setLevelTerm(6000);
       setballCount(6);
     }
@@ -91,11 +91,15 @@ const Menu = () => {
     }
     
     if (selectedItem === "CUSTOM GHOSTING") {
-      setPageInfo("CUSTOM GHOSTING")
-      setSecond(5);
+      setPageInfo("CUSTOM GHOSTING");
+    
+      if (CustomRep === 0) setCustomRep(10); // 예: 기본값 10
+      if (CustomSet === 0) setCustomSet(3);  // 예: 기본값 3
+    
       setCustomLevelTerm(CustomLevelTerm);
       setballCount(ballCount);
     }
+    
 
     router.push(`/measure?item=${encodeURIComponent(selectedItem!)}`);
     setOpen(false);
@@ -105,7 +109,7 @@ const Menu = () => {
     setName('');
     setGender('');
   }, []);
-
+  
   return (
     <>
       <Dialog open={open} onOpenChange={setOpen}>

@@ -50,6 +50,13 @@ export default function Page() {
     setFinalScore(null);
   }, []);
 
+  useEffect(() => {
+    if (pageInfo === 'LEVEL PRACTICE' && running && second <= 0) {
+      setRunning(false);
+      setIsFinished(true);
+    }
+  }, [second, running, pageInfo]);
+  
   return (
     <div className="flex justify-center items-center h-dvh bg-zinc-800">
       <Suspense fallback={<div className="text-white">Loading...</div>}>
@@ -68,7 +75,7 @@ export default function Page() {
           :
             <p>INTERVAL : {(levelTerm / 1000).toFixed(2)}초</p>
           }
-          <p>TIME : {second}</p>
+          {pageInfo !== 'CUSTOM GHOSTING' && <p>TIME : {second}</p>}
           {pageInfo === 'VO2 MAX TEST' && <p>NAME : {name}</p>}
           {pageInfo === 'VO2 MAX TEST' && <p>GENDER : {gender}</p>}
         </div>
@@ -100,8 +107,6 @@ export default function Page() {
         </button>
       )}
 
-      
-
       {/* 🏓 공 애니메이션 */}
       <div className="relative w-[90%] max-w-[600px] h-[80vh] bg-[url('/images/squash_map.png')] bg-cover bg-center bg-no-repeat">
         <BallAnimation 
@@ -123,7 +128,7 @@ export default function Page() {
 
       {/* 휴식 표시 */}
       {isResting && (
-        <div className="absolute bottom-8 text-white text-3xl font-bold bg-black/60 px-6 py-4 rounded-xl shadow-lg">
+        <div className="absolute bottom-50 text-white text-3xl font-bold bg-black/60 px-6 py-4 rounded-xl shadow-lg">
           휴식 중
         </div>
       )}

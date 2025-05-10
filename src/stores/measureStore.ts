@@ -37,8 +37,8 @@ const useMeasureStore = create<MeasureState>()(
       levelTerm: 6000,
       CustomLevelTerm: 6000,
       ballCount: 6,
-      CustomSet: 0,
-      CustomRep: 0,
+      CustomSet: 3,
+      CustomRep: 10,
       pageInfo: '',
       name: '',
       gender: '',
@@ -49,8 +49,10 @@ const useMeasureStore = create<MeasureState>()(
       setCustomSet: (CustomSet) => set({ CustomSet }),
       setCustomRep: (CustomRep) => set({ CustomRep }),
       setSecond: (second) => set({ second }),
-      resetSecond: () => set({ second: 6 }),
-      decreaseSecond: () => set((state) => ({ second: state.second - 1 })),
+      resetSecond: () => set({ second: 60 }),
+      decreaseSecond: () => set((state) => ({
+        second: state.second > 0 ? state.second - 1 : 0
+      })),
       increaseLevel: () => set((state) => ({ level: state.level + 1 })),
       setPageInfo: (pageInfo) => set({ pageInfo }),
       setName: (name) => set({ name }),
