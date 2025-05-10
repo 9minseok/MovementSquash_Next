@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import useMeasureStore from '@/stores/measureStore';
+import { off } from 'process';
 
 export const getSquashPositions = (count: number) => {
   const positionsByCount: Record<number, { top: string; left: string }[]> = {
@@ -45,17 +46,16 @@ export const getSquashPositions = (count: number) => {
 
 interface BallAnimationProps {
   running: boolean;
+  setRunning: React.Dispatch<React.SetStateAction<boolean>>;
+  isResting: boolean;
+  setIsResting: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export default function BallAnimation({ running }: BallAnimationProps) {
+export default function BallAnimation({ running, setRunning, isResting, setIsResting }: BallAnimationProps) {
   const debugMode = false; // 공 위치 디버깅용
 
-  const [currentIndex, setCurrentIndex] = useState<number | null>(null);
-  const prevIndexRef = useRef<number | null>(null);
-  const intervalRef = useRef<NodeJS.Timeout | null>(null);
-  const secondTimerRef = useRef<NodeJS.Timeout | null>(null);
-  const iscustomMode = false;
   const {
+    pageInfo,
     second,
     setLevelTerm,
     decreaseSecond,
@@ -66,6 +66,10 @@ export default function BallAnimation({ running }: BallAnimationProps) {
     CustomSet,
     CustomRep
   } = useMeasureStore();
+  const [currentIndex, setCurrentIndex] = useState<number | null>(null);
+  const prevIndexRef = useRef<number | null>(null);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const secondTimerRef = useRef<NodeJS.Timeout | null>(null);
   
   const positions = getSquashPositions(ballCount);
   const totalCustomCount = CustomSet * CustomRep;
@@ -102,9 +106,10 @@ export default function BallAnimation({ running }: BallAnimationProps) {
   
   // 공 애니메이션
   useEffect(() => {
-    if (!running) return;
+    if (!running || !isResting) return;
   
-    if (iscustomMode) {
+    if (pageInfo === 'CUSTOM GHOSTING') {
+      console.log('커스텀 모드 볼 애니메이션')
       const interval = 2000; // 커스텀 모드의 고정 속도
       setAnimationCount(0); // 초기화
       console.log('animationCount', animationCount)
@@ -137,6 +142,7 @@ export default function BallAnimation({ running }: BallAnimationProps) {
   
       intervalRef.current = setInterval(runCustom, interval);
     } else {
+      console.log('VO2, LEVEL 모드 볼 애니메이션')
       // 기존 레벨 기반 자동 진행 로직
       const interval = getIntervalByLevel(level);
       setLevelTerm(interval);
@@ -189,12 +195,28 @@ export default function BallAnimation({ running }: BallAnimationProps) {
   }, [running]);
 
   // 0초 되면 라운드 증가 + 타이머 초기화
+  // 라운드 종료 후 휴식 타이머
   useEffect(() => {
-    if (second <= 0) {
-      increaseLevel();
-      resetSecond(); // 다시 60초로 초기화
+    if (second <= 0 && running && !isResting) {
+      if (level >= 16) {
+        setRunning(false);
+        return;
+      }
+
+      setIsResting(true);
+      console.log('휴식 시작');
+
+      // 10초 후에 다음 라운드로 넘어감
+      const restTimeout = setTimeout(() => {
+        increaseLevel();
+        resetSecond(); // 다시 60초로 초기화
+        setIsResting(false);
+        console.log('휴식 종료 및 다음 라운드 시작');
+      }, 10000); // 10초
+
+      return () => clearTimeout(restTimeout);
     }
-  }, [second]);
+  }, [second, running, isResting]);
 
 
   if (currentIndex === null) return null;

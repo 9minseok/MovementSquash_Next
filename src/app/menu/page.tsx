@@ -55,38 +55,45 @@ const Menu = () => {
   const [customLevel, setCustomLevel] = useState(1);
 
   const router = useRouter();
-  const { name, setName, 
-          gender, setGender, 
-          ballCount, setballCount, 
+  const { 
+          name, setName, 
+          gender, setGender,
+          ballCount, setballCount,
+          CustomLevelTerm, setCustomLevelTerm,
           CustomSet, setCustomSet,
           CustomRep, setCustomRep,
           setLevel, 
           setLevelTerm, 
-          setSecond } = useMeasureStore();
+          setSecond,
+          setPageInfo, 
+      } = useMeasureStore();
 
   const handleStart = () => {
     if (selectedItem === "VO2 MAX TEST") {
       if (!name || !gender) return;
+      setPageInfo("VO2 MAX TEST")
       setLevel(1);
-      setSecond(60);
+      setSecond(2);
       setLevelTerm(6000);
       setballCount(6);
     }
-
+    
     if (selectedItem === "LEVEL PRACTICE") {
       if (customLevel > 16) {
         alert('최대 레벨은 16입니다.');
         return;
       }
+      setPageInfo("LEVEL PRACTICE")
       setSecond(60);
       setLevel(customLevel);
       setLevelTerm(getIntervalByLevel(customLevel));
       setballCount(6);
     }
-
+    
     if (selectedItem === "CUSTOM GHOSTING") {
-      setSecond(60);
-      setLevelTerm(getIntervalByLevel(customLevel));
+      setPageInfo("CUSTOM GHOSTING")
+      setSecond(5);
+      setCustomLevelTerm(CustomLevelTerm);
       setballCount(ballCount);
     }
 
@@ -197,7 +204,7 @@ const Menu = () => {
               </div>
               <div>
                 <Label htmlFor="level">팝업 간격</Label>
-                <Input id="name" className="mt-2" value={name} onChange={(e) => setName(e.target.value)} />
+                <Input id="customLevelTerm" type="number" className="mt-2" value={CustomLevelTerm} onChange={(e) => setCustomLevelTerm(Number(e.target.value))} />
               </div>
               <div>
                 <Label htmlFor="level">세트 수</Label>
