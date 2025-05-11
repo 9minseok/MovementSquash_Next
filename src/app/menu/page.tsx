@@ -73,9 +73,9 @@ const Menu = () => {
       if (!name || !gender) return;
       setPageInfo("VO2 MAX TEST")
       setLevel(1);
-      setSecond(60);
+      setSecond(6);
       setLevelTerm(6000);
-      setballCount(6);
+      setballCount(4);
     }
     
     if (selectedItem === "LEVEL PRACTICE") {

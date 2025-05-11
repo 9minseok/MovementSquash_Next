@@ -49,7 +49,7 @@ const useMeasureStore = create<MeasureState>()(
       setCustomSet: (CustomSet) => set({ CustomSet }),
       setCustomRep: (CustomRep) => set({ CustomRep }),
       setSecond: (second) => set({ second }),
-      resetSecond: () => set({ second: 60 }),
+      resetSecond: () => set({ second: 6 }),
       decreaseSecond: () => set((state) => ({
         second: state.second > 0 ? state.second - 1 : 0
       })),

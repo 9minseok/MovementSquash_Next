@@ -5,6 +5,12 @@ import useMeasureStore from '@/stores/measureStore';
 
 export const getSquashPositions = (count: number) => {
   const positionsByCount: Record<number, { top: string; left: string }[]> = {
+    4: [
+      { top: '7%', left: '10%' },
+      { top: '7%', left: '90%' },
+      { top: '93%', left: '10%' },
+      { top: '93%', left: '90%' },
+    ],
     6: [
       { top: '7%', left: '10%' },
       { top: '7%', left: '90%' },
@@ -24,17 +30,17 @@ export const getSquashPositions = (count: number) => {
       { top: '90%', left: '90%' },
     ],
     12: [
-      { top: '5%', left: '10%' },
-      { top: '5%', left: '50%' },
-      { top: '5%', left: '90%' },
-      { top: '30%', left: '10%' },
-      { top: '30%', left: '50%' },
-      { top: '30%', left: '90%' },
+      { top: '10%', left: '10%' },
+      { top: '10%', left: '90%' },
+      { top: '25%', left: '10%' },
+      { top: '25%', left: '90%' },
+      { top: '40%', left: '10%' },
+      { top: '40%', left: '90%' },
       { top: '60%', left: '10%' },
-      { top: '60%', left: '50%' },
       { top: '60%', left: '90%' },
+      { top: '75%', left: '10%' },
+      { top: '75%', left: '90%' },
       { top: '90%', left: '10%' },
-      { top: '90%', left: '50%' },
       { top: '90%', left: '90%' },
     ],
   };
