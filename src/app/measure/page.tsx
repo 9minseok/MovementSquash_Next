@@ -8,6 +8,7 @@ import useMeasureStore from '@/stores/measureStore';
 
 export default function Page() {
   const router = useRouter();
+  const [countdown, setCountdown] = useState<number | null>(null);
   const [running, setRunning] = useState(false);
   const [isResting, setIsResting] = useState(false);
   const [isFinished, setIsFinished] = useState(false);
@@ -17,6 +18,26 @@ export default function Page() {
 
   const [finalScore, setFinalScore] = useState<number | null>(null);
 
+  const startCountdown = (seconds: number, onComplete?: () => void) => {
+    let count = seconds;
+    setCountdown(count);
+  
+    const countdownInterval = setInterval(() => {
+      count -= 1;
+      if (count > 0) {
+        setCountdown(count);
+      } else {
+        clearInterval(countdownInterval);
+        setCountdown(null);
+        setRunning(true);
+        setFinalScore(null);
+        setElapsedTime(0);
+        setIsFinished(false);
+        onComplete?.(); // ✅ 카운트다운 종료 후 실행
+      }
+    }, 1000);
+  };
+  
   useEffect(() => {
     if (running) {
       const id = setInterval(() => {
@@ -89,10 +110,7 @@ export default function Page() {
               setRunning(false);
               setIsFinished(true);
             } else {
-              setRunning(true);
-              setFinalScore(null);
-              setElapsedTime(0);
-              setIsFinished(false);
+              startCountdown(3);
             }
           }}
         >
@@ -114,6 +132,7 @@ export default function Page() {
           setRunning={setRunning}
           isResting={isResting}
           setIsResting={setIsResting}  
+          startCountdown={startCountdown}
         />
       </div>
 
@@ -130,6 +149,12 @@ export default function Page() {
       {isResting && (
         <div className="absolute bottom-50 text-white text-3xl font-bold bg-black/60 px-6 py-4 rounded-xl shadow-lg">
           휴식 중
+        </div>
+      )}
+
+      {countdown !== null && (
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white text-6xl font-extrabold bg-black/70 px-10 py-6 rounded-2xl shadow-2xl">
+          {countdown === 0 ? 'START!' : countdown}
         </div>
       )}
     </div>

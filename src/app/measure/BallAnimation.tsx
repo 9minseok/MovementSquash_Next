@@ -53,9 +53,10 @@ interface BallAnimationProps {
   setRunning: React.Dispatch<React.SetStateAction<boolean>>;
   isResting: boolean;
   setIsResting: React.Dispatch<React.SetStateAction<boolean>>;
+  startCountdown: (value: number, onComplete?: () => void) => void;
 }
 
-export default function BallAnimation({ running, setRunning, isResting, setIsResting }: BallAnimationProps) {
+export default function BallAnimation({ running, setRunning, isResting, setIsResting, startCountdown }: BallAnimationProps) {
   const debugMode = false; // 공 위치 디버깅용
 
   const {
@@ -111,25 +112,17 @@ export default function BallAnimation({ running, setRunning, isResting, setIsRes
   // 공 애니메이션
   useEffect(() => {
     if (!running || isResting) return;
-    console.log('====================================')
-    console.log('공 애니메이션 useEffect 실행됨')
-    console.log('====================================')
-  
+
     if (pageInfo === 'CUSTOM GHOSTING') {
-      console.log('커스텀 모드 볼 애니메이션');
   
       let rep = 0;
       let setNum = 0;
 
       const runCustom = () => {
-        console.log('runCustom 실행됨');
 
         if (rep >= CustomRep) {
           rep = 0;
           setNum += 1;
-
-          console.log('rep', rep);
-          console.log('setNum', setNum);
 
           if (setNum >= CustomSet) {
             setRunning(false);
@@ -140,8 +133,12 @@ export default function BallAnimation({ running, setRunning, isResting, setIsRes
 
           restTimeoutRef.current = setTimeout(() => {
             setIsResting(false);
-            runCustom(); // 휴식 후 다음 세트 시작
-          }, 2000); // 2초 휴식
+          
+            // ✅ 카운트다운 시작 → 끝나고 runCustom 실행
+            startCountdown(3, () => {
+              runCustom();
+            });
+          }, 2000);
 
           return;
         }
@@ -242,11 +239,14 @@ export default function BallAnimation({ running, setRunning, isResting, setIsRes
         console.log('휴식 시작');
 
         restTimeoutRef.current = setTimeout(() => {
-          increaseLevel();
-          resetSecond(); // 다시 60초로 초기화
-          setIsResting(false);
-          console.log('휴식 종료 및 다음 라운드 시작');
-        }, 10000); // 10초
+          startCountdown(3, () => {
+            console.log('휴식 종료 및 다음 라운드 시작');
+            increaseLevel();
+            resetSecond(); // 다시 60초로 초기화
+            setIsResting(false);
+            // 카운트다운 끝난 후에 추가로 할 작업이 있다면 여기에 작성
+          });
+        }, 10000); // 10초 
       }
     }
   }, [second]); // 🔑 의존성을 second 하나만 넣기
