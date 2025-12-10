@@ -24,6 +24,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
+import useWindowSize from "@/hooks/useWindowSize";
 
 const getIntervalByLevel = (level: number) => {
   const map: Record<number, number> = {
@@ -48,6 +49,7 @@ const getIntervalByLevel = (level: number) => {
 };
 
 const Menu = () => {
+  const { width, height } = useWindowSize();
   const MenuList = ["VO2 MAX TEST", "LEVEL PRACTICE", "CUSTOM GHOSTING"];
 
   const [selectedItem, setSelectedItem] = useState<string | null>(null);
